@@ -142,8 +142,8 @@ export class NewOperationComponent implements OnInit {
     this.loading = true;
 
     this.operationService.create({
-      startDate: this.startDate.value,
-      endDate: this.startDate.value,
+      startDate: moment(this.startDate.value).utc(true).toISOString(),
+      endDate:  moment(this.endDate.value).utc(true).toISOString(),
       service: this.serviceSelect,
       technician: this.technicianSelect
     }).subscribe({

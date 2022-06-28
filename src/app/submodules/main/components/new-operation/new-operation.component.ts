@@ -5,6 +5,7 @@ import { OperationService, ServiceService, TechnicianService } from '../../servi
 import * as moment from 'moment';
 import { ToastService } from '../../../../service/shared/shared.imports';
 import { ServiceModel, TechnicianModel } from '../../shared/models/models.imports';
+import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 moment.locale("es");
 
 @Component({
@@ -21,13 +22,15 @@ export class NewOperationComponent implements OnInit {
   maxEndDate = this.maxStartDate;
   minEndDate!: Date;
 
-  technicians: TechnicianModel[] = [];
+  technicianSelect!: any;
   searchTechnician!: string;
+  technicians!: TechnicianModel[];
   errorMessageTechnician!: string;
   suggestionsTechnician$!: Observable<TechnicianModel[]>;
-
-  services: ServiceModel[] = [];
+  
+  serviceSelect!: any;
   searchService!: string;
+  services!: ServiceModel[];
   errorMessageService!: string;
   suggestionsService$!: Observable<ServiceModel[]>;
 
@@ -80,6 +83,7 @@ export class NewOperationComponent implements OnInit {
 
   searchTechnicians(): void {
     this.suggestionsTechnician$ = new Observable((observer: Observer<string | undefined>) => {
+      this.technicianSelect = null;
       observer.next(this.documentTechnician.value)
     }).pipe(
       switchMap((query: string) => {
@@ -88,10 +92,9 @@ export class NewOperationComponent implements OnInit {
           this.searchingTechnician = true;
           return this.technicianService.getByDocument(query).pipe(
             map((technicians: TechnicianModel[]) => {
-              if (!technicians.length) this.documentTechnician.setErrors({'notFound': true});
+              this.technicians = technicians || []
               this.searchingTechnician = false;
-              this.technicians = technicians;
-              return technicians || []
+              return this.technicians
             }),
             tap(() => noop, err => {
               this.errorMessageTechnician = err && err.message || 'Lo siento, no se pudo procesar la petición.';
@@ -105,6 +108,7 @@ export class NewOperationComponent implements OnInit {
 
   searchServices(): void {
     this.suggestionsService$ = new Observable((observer: Observer<string | undefined>) => {
+      this.serviceSelect = null;
       observer.next(this.idService.value)
     }).pipe(
       switchMap((query: string) => {
@@ -113,10 +117,9 @@ export class NewOperationComponent implements OnInit {
           this.searchingService = true;
           return this.serviceService.getById(query).pipe(
             map((services: ServiceModel[]) => {
-              if (!services.length) this.idService.setErrors({'notFound': true});
+              this.services = services || []
               this.searchingService = false;
-              this.services = services
-              return services || []
+              return this.services
             }),
             tap(() => noop, err => {
               this.errorMessageService = err && err.message || 'Lo siento, no se pudo procesar la petición.';
@@ -135,20 +138,14 @@ export class NewOperationComponent implements OnInit {
   }
 
   save(): void {
-    const technicianMatch: any = this.technicians.find(value => value.documentNumber === this.documentTechnician.value);
-    const serviceMatch: any = this.services.find(value => value.idService === Number(this.idService.value));
-    if (!technicianMatch) this.documentTechnician.setErrors({'notMatch': true});
-    if (!serviceMatch) this.idService.setErrors({'notMatch': true});
-    
-    if (!this.formOperation.valid) return;
     
     this.loading = true;
 
     this.operationService.create({
       startDate: this.startDate.value,
       endDate: this.startDate.value,
-      service: serviceMatch,
-      technician: technicianMatch
+      service: this.serviceSelect,
+      technician: this.technicianSelect
     }).subscribe({
       next: (result) => {
         this.showToastSuccess("Operación creada exitosamente")
@@ -166,6 +163,8 @@ export class NewOperationComponent implements OnInit {
 
   resetForm(): void {
     this.formOperation.reset();
+    this.serviceSelect = undefined;
+    this.technicianSelect = undefined;
   }
 
   showToastDanger(content: string) {
@@ -174,5 +173,35 @@ export class NewOperationComponent implements OnInit {
 
   showToastSuccess(content: string) {
     this.toastService.showSuccess("Handyman dice:", content);
+  }
+
+  onSelectTechnician(event: any): void {
+    if (event && event.item) this.technicianSelect = event.item;
+  }
+
+  onSelectService(event: any): void {
+    if (event && event.item) this.serviceSelect = event.item;
+  }
+
+  noResultsTechnicians(event: boolean): void {
+    if (event) this.documentTechnician.setErrors({'notFound': true});
+  }
+
+  noResultsServices(event: boolean): void {
+    if (event) this.idService.setErrors({'notFound': true});
+  }
+
+  onBlurTechnician(): void{
+    if(this.documentTechnician.value) {
+      this.technicianSelect = this.technicians.find(value => value.documentNumber === this.documentTechnician.value)
+      if (!this.technicianSelect) this.documentTechnician.setErrors({'notFound': true});
+    }
+  }
+
+  onBlurService(){
+    if(this.idService.value) {
+      this.serviceSelect = this.services.find(value => value.idService === Number(this.idService.value))
+      if (!this.serviceSelect) this.idService.setErrors({'notFound': true});
+    }
   }
 }

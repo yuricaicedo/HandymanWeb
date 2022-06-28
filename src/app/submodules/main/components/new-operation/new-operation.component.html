@@ -9,8 +9,13 @@
                            [isAnimated]="true"
                            typeaheadOptionField="documentNumber"
                            [typeahead]="suggestionsTechnician$"
+                           [typeaheadScrollable]="true"
+                           [typeaheadOptionsInScrollableView]="5"
                            [typeaheadAsync]="true"
-                           [adaptivePosition]="true" 
+                           [adaptivePosition]="true"
+                           (blur)="onBlurTechnician()"
+                           (typeaheadOnSelect)="onSelectTechnician($event)"
+                           (typeaheadNoResults)="noResultsTechnicians($event)"
                            formControlName="documentTechnician"/>
                     <small *ngIf="searchingTechnician" class="form-text text-muted">buscando...</small>
                     <div class="alert alert-danger" role="alert" *ngIf="errorMessageTechnician">
@@ -18,8 +23,7 @@
                     </div>
                     <div class="text-danger" *ngIf="!documentTechnician.valid && (documentTechnician.touched || documentTechnician.dirty)">
                         <div *ngIf="documentTechnician.errors?.['required']"> La cédula del técnico es requerida </div>
-                        <div *ngIf="documentTechnician.errors?.['notFound']"> No se encontraron coincidencias </div>
-                        <div *ngIf="documentTechnician.errors?.['notMatch']"> La cédula del técnico no se encuentra registrada </div>
+                        <div *ngIf="documentTechnician.errors?.['notFound']"> La cédula del tecnico no se encuentra registrada </div>
                     </div>
                 </div>
                 <div class="mb-3">
@@ -29,8 +33,13 @@
                            [isAnimated]="true"
                            typeaheadOptionField="idService"
                            [typeahead]="suggestionsService$"
+                           [typeaheadScrollable]="true"
+                           [typeaheadOptionsInScrollableView]="5"
                            [typeaheadAsync]="true"
-                           [adaptivePosition]="true" 
+                           [adaptivePosition]="true"
+                           (blur)="onBlurService()"
+                           (typeaheadOnSelect)="onSelectService($event)"
+                           (typeaheadNoResults)="noResultsServices($event)"
                            formControlName="idService"/>
                     <small *ngIf="searchingService" class="form-text text-muted">buscando...</small>
                     <div class="alert alert-danger" role="alert" *ngIf="errorMessageService">
@@ -39,8 +48,7 @@
                     <div  class="text-danger" *ngIf="!idService.valid && (idService.touched || idService.dirty)">
                         <div *ngIf="idService.errors?.['required']"> El número del servicio es requerido </div>
                         <div *ngIf="idService.errors?.['pattern']"> El campo debe contener números </div>
-                        <div *ngIf="idService.errors?.['notFound']"> No se encontraron coincidencias </div>
-                        <div *ngIf="idService.errors?.['notMatch']"> El número del servicio no se encuentra registrado </div>
+                        <div *ngIf="idService.errors?.['notFound']"> La cédula del tecnico no se encuentra registrada </div>
                     </div>
                 </div>
                 <div class="row">
@@ -85,6 +93,13 @@
         <div class="col-sm-12 col-md-6 d-flex align-items-center justify-content-center">
             <div class="row w-100">
                 <div class="d-grid gap-2">
+                    <div class="text-center p-3">
+                        <small class="form-text text-muted"> ID Service: {{ serviceSelect?.idService || 'N/A' }}</small><br>
+                        <small class="form-text text-muted"> Dirección: {{ serviceSelect?.direction || 'N/A' }}</small><br>
+                        <small class="form-text text-muted"> Jornada: {{ serviceSelect?.journey || 'N/A' }}</small><br>
+                        <small class="form-text text-muted"> Usuario: {{ serviceSelect?.user || 'N/A' }}</small><br>
+                        <small class="form-text text-muted"> Tipo de servicio: {{ serviceSelect?.idServiceType?.description || 'N/A' }}</small><br>
+                    </div>
                     <button class="btn btn-primary" type="button" (click)="save()" [disabled]="!formOperation.valid || loading">{{ loading ? 'Cargando...' : 'Crear'}}</button>
                 </div>
             </div>

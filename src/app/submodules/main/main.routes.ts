@@ -1,23 +1,24 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { RegisterOperationComponent } from '../components/register-operation/register-operation.component';
 
 import { MainComponent } from './main.component';
+import { NewOperationComponent } from './components/new-operation/new-operation.component';
 
 const routes: Routes = [
   {
     path: '',
     component: MainComponent,
     children: [
-        { path: '', redirectTo:'register-operation', pathMatch: 'full' },
-        { path: 'register-operation', component: RegisterOperationComponent },
-        { path: '**', redirectTo: 'register-operation' }
+        { path: '', redirectTo:'new-operation', pathMatch: 'full' },
+        { path: 'new-operation', component: NewOperationComponent },
+        { path: '**', redirectTo: 'new-operation' }
     ]
   },
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [CommonModule, RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
 export class MainRoutingModule { }

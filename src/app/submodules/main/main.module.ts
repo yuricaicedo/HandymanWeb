@@ -1,23 +1,25 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ReactiveFormsModule } from '@angular/forms';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
+import { TypeaheadModule }  from 'ngx-bootstrap/typeahead';
+import { ToastModule }  from 'primeng/toast';
 
-import { RegisterOperationComponent } from '../components/register-operation/register-operation.component';
 import { MainRoutingModule } from './main.routes';
+import { NewOperationComponent } from './components/new-operation/new-operation.component';
 
 @NgModule({
   declarations: [
-    RegisterOperationComponent
+    NewOperationComponent
   ],
   imports: [
-    FormsModule,
-    NgbModule,
+    TypeaheadModule.forRoot(),
     CommonModule,
     MainRoutingModule,
     OwlDateTimeModule, 
-    OwlNativeDateTimeModule
+    ReactiveFormsModule,
+    OwlNativeDateTimeModule,
+    ToastModule
   ]
 })
 export class MainModule { }

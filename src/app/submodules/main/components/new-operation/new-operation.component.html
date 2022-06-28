@@ -1,0 +1,93 @@
+<div class="container my-5 p-5 bg-light rounded-3">
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            <form [formGroup]="formOperation">
+                <div class="mb-3">
+                    <label>Cédula del técnico</label>
+                    <input type="text" class="form-control" placeholder="Ingrese el número de la cédula del técnico"
+                           autocomplete="false" 
+                           [isAnimated]="true"
+                           typeaheadOptionField="documentNumber"
+                           [typeahead]="suggestionsTechnician$"
+                           [typeaheadAsync]="true"
+                           [adaptivePosition]="true" 
+                           formControlName="documentTechnician"/>
+                    <small *ngIf="searchingTechnician" class="form-text text-muted">buscando...</small>
+                    <div class="alert alert-danger" role="alert" *ngIf="errorMessageTechnician">
+                        {{ errorMessageTechnician }}
+                    </div>
+                    <div class="text-danger" *ngIf="!documentTechnician.valid && (documentTechnician.touched || documentTechnician.dirty)">
+                        <div *ngIf="documentTechnician.errors?.['required']"> La cédula del técnico es requerida </div>
+                        <div *ngIf="documentTechnician.errors?.['notFound']"> No se encontraron coincidencias </div>
+                        <div *ngIf="documentTechnician.errors?.['notMatch']"> La cédula del técnico no se encuentra registrada </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label>Número del servicio</label>
+                    <input type="text" class="form-control" placeholder="Ingrese el número del servicio"
+                           autocomplete="false" 
+                           [isAnimated]="true"
+                           typeaheadOptionField="idService"
+                           [typeahead]="suggestionsService$"
+                           [typeaheadAsync]="true"
+                           [adaptivePosition]="true" 
+                           formControlName="idService"/>
+                    <small *ngIf="searchingService" class="form-text text-muted">buscando...</small>
+                    <div class="alert alert-danger" role="alert" *ngIf="errorMessageService">
+                        {{ errorMessageService }}
+                    </div>
+                    <div  class="text-danger" *ngIf="!idService.valid && (idService.touched || idService.dirty)">
+                        <div *ngIf="idService.errors?.['required']"> El número del servicio es requerido </div>
+                        <div *ngIf="idService.errors?.['pattern']"> El campo debe contener números </div>
+                        <div *ngIf="idService.errors?.['notFound']"> No se encontraron coincidencias </div>
+                        <div *ngIf="idService.errors?.['notMatch']"> El número del servicio no se encuentra registrado </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <div class="mb-3">
+                            <label>Fecha inicial</label>
+                            <input class="form-control"
+                                   [min]="minStartDate"
+                                   [max]="maxStartDate"
+                                   [owlDateTimeTrigger]="dt" 
+                                   [owlDateTime]="dt"
+                                   formControlName="startDate">
+                            <owl-date-time #dt></owl-date-time>
+                            <div *ngIf="!startDate.valid && startDate.touched">
+                                <div class="text-danger" role="alert" *ngIf="startDate.errors?.['required']">
+                                    La fecha inicial es requerido
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <div class="mb-3">
+                            <label>Fecha final</label>
+                            <input class="form-control"
+                                   [min]="minEndDate"
+                                   [max]="maxEndDate"
+                                   [owlDateTimeTrigger]="dt1" 
+                                   [owlDateTime]="dt1"
+                                   formControlName="endDate"
+                                   [disabled]="!startDate.value">
+                            <owl-date-time #dt1 [disabled]="!startDate.value"></owl-date-time>
+                            <div *ngIf="!endDate.valid && endDate.touched">
+                                <div class="text-danger" role="alert" *ngIf="endDate.errors?.['required']">
+                                    La fecha final es requerido
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-12 col-md-6 d-flex align-items-center justify-content-center">
+            <div class="row w-100">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary" type="button" (click)="save()" [disabled]="!formOperation.valid || loading">{{ loading ? 'Cargando...' : 'Crear'}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

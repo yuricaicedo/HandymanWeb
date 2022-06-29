@@ -1,9 +1,12 @@
 <div class="container my-5 p-5 bg-light rounded-3">
     <div class="row">
         <div class="col-sm-12 col-md-6">
+            <div class="text-end pb-4">
+                <small class="text-muted">Son obligatorios los campos marcados con un asterisco (<small class="text-danger">*</small>)</small>
+            </div>
             <form [formGroup]="formOperation">
                 <div class="mb-3">
-                    <label>Cédula del técnico</label>
+                    <label>Cédula del técnico <small class="text-danger">*</small></label>
                     <input type="text" class="form-control" placeholder="Ingrese el número de la cédula del técnico"
                            autocomplete="false" 
                            [isAnimated]="true"
@@ -27,7 +30,7 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label>Número del servicio</label>
+                    <label>Número del servicio <small class="text-danger">*</small></label>
                     <input type="text" class="form-control" placeholder="Ingrese el número del servicio"
                            autocomplete="false" 
                            [isAnimated]="true"
@@ -48,13 +51,13 @@
                     <div  class="text-danger" *ngIf="!idService.valid && (idService.touched || idService.dirty)">
                         <div *ngIf="idService.errors?.['required']"> El número del servicio es requerido </div>
                         <div *ngIf="idService.errors?.['pattern']"> El campo debe contener números </div>
-                        <div *ngIf="idService.errors?.['notFound']"> La cédula del tecnico no se encuentra registrada </div>
+                        <div *ngIf="idService.errors?.['notFound']"> El número del servicio no se encuentra registrada </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-sm-12">
                         <div class="mb-3">
-                            <label>Fecha inicial</label>
+                            <label>Fecha inicial <small class="text-danger">*</small></label>
                             <input class="form-control"
                                    [min]="minStartDate"
                                    [max]="maxStartDate"
@@ -71,7 +74,7 @@
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div class="mb-3">
-                            <label>Fecha final</label>
+                            <label>Fecha final <small class="text-danger">*</small></label>
                             <input class="form-control"
                                    [min]="minEndDate"
                                    [max]="maxEndDate"

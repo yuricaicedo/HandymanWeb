@@ -16,9 +16,8 @@ moment.locale("es");
 export class NewOperationComponent implements OnInit {
   
   formOperation!: FormGroup;
-  today = moment();
-  maxStartDate = new Date(this.today.toDate());
-  minStartDate = new Date(this.today.subtract(7, 'days').toDate());
+  maxStartDate = new Date(moment().toDate());
+  minStartDate = new Date(moment().subtract(7, 'days').toDate());
   maxEndDate = this.maxStartDate;
   minEndDate!: Date;
 
@@ -165,6 +164,9 @@ export class NewOperationComponent implements OnInit {
     this.formOperation.reset();
     this.serviceSelect = undefined;
     this.technicianSelect = undefined;
+    this.maxStartDate = new Date(moment().toDate());
+    this.minStartDate = new Date(moment().subtract(7, 'days').toDate());
+    this.maxEndDate = this.maxStartDate;
   }
 
   showToastDanger(content: string) {
